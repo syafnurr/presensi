@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PresensiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('auth/login');
+Route::middleware(['guest:siswa'])->group(function () {
+    Route::get('/', function () {
+        return view('auth/login');
+    })->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::middleware(['auth:siswa'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/logout', [AuthController::class, 'logout']);
+
+    // Presensi
+    Route::get('/presensi/create', [PresensiController::class, 'create']);
+});
