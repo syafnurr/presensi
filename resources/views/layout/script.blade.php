@@ -18,6 +18,10 @@
 <!-- Webcam -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 
+<!-- Alert -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 <script>
     am4core.ready(function() {
 

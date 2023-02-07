@@ -35,10 +35,17 @@
 </div>
 <div class="row">
     <div class="col">
+        @if ($cek > 0)    
+        <button id="takeabsen" class="btn btn-danger btn-block">
+            <ion-icon name="camera-outline"></ion-icon>
+            Absen Pulang
+        </button>
+        @else
         <button id="takeabsen" class="btn btn-primary btn-block">
             <ion-icon name="camera-outline"></ion-icon>
             Absen Masuk
         </button>
+        @endif
     </div>
 </div>
 <div class="row mt-2">
@@ -91,22 +98,33 @@
         var lokasi = $("#lokasi").val();
         $.ajax({
             type: 'POST',
-            url:'/presensi/store',
-            data:{
-                _token:"{{ csrf_token() }}",
+            url: '/presensi/store',
+            data: {
+                _token: "{{ csrf_token() }}",
                 image: image,
                 lokasi: lokasi
             },
             cache: false,
-            success: function(respond){
-                if(respond == 0 ) {
-                    alert('success');
+            success: function(respond) {
+                var status = respond.split("|");
+                if (status[0] == "success") {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: status[1],
+                        icon: 'success',
+                        // confirmButtonText: 'OK'
+                    })
+                    setTimeout("location.href='/dashboard'", 1500);
                 } else {
-                    alert('error');
+                    Swal.fire({
+                        title: 'Error !',
+                        text: 'Coba Ulangi Lagi atau Hubungi Admin',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    })
                 }
             }
         })
     });
-
 </script>
 @endpush
