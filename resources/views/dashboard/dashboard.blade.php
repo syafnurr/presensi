@@ -73,7 +73,8 @@
                             </div>
                             <div class="presencedetail">
                                 <h4 class="presencetitle">Masuk</h4>
-                                <span>07:00</span>
+                                <span>{{ $presensihariini = $presensihariini->jam_in ? $presensihariini->jam_in : 'Belum Absen' }}</span>
+                                <!-- <span>07:00</span> -->
                             </div>
                         </div>
                     </div>
@@ -88,7 +89,7 @@
                             </div>
                             <div class="presencedetail">
                                 <h4 class="presencetitle">Pulang</h4>
-                                <span>12:00</span>
+                                <span>{{ $presensihariini = $presensihariini->jam_out && $presensihariini->jam_out = $presensihariini->jam_out ? $presensihariini->jam_out : 'Belum Absen' }}</span>
                             </div>
                         </div>
                     </div>
