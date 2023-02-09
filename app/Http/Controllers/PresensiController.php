@@ -22,7 +22,17 @@ class PresensiController extends Controller
         $nik = Auth::guard('siswa')->user()->nik;
         $tgl_presensi = date("Y-m-d");
         $jam = date("H:i:s");
+        $latitudesekolahan = -7.943889759817503;
+        $longitudesekolahan = 110.374204753438;
         $lokasi = $request->lokasi;
+        $lokasiuser = explode(",", $lokasi);
+        $latitudeuser = $lokasiuser[0];
+        $longitudeuser = $lokasiuser[1];
+
+        $jarak = $this->distance($latitudesekolahan, $longitudesekolahan, $latitudeuser, $longitudeuser);
+        $radius = round($jarak["meters"]);
+        dd($radius);
+
         $image = $request->image;
         $folderPath = "public/uploads/absensi/";
         $formatName = $nik . "-" . $tgl_presensi;
@@ -32,34 +42,53 @@ class PresensiController extends Controller
         $file = $folderPath . $fileName;
 
         $cek = DB::table('presensi')->where('tgl_presensi', $tgl_presensi)->where('nik', $nik)->count();
-        if ($cek > 0) {
-            $data_pulang = [
-                'jam_out' => $jam,
-                'foto_out' => $fileName,
-                'lokasi_out' => $lokasi
-            ];
-            $update = DB::table('presensi')->where('tgl_presensi', $tgl_presensi)->where('nik', $nik)->update($data_pulang);
-            if ($update) {
-                echo "success|Terima Kasih, Selamat Pulang|out";
-                Storage::put($file, $image_base64);
-            } else {
-                echo "error|Maaf Absen Gagal, Mohon Hubungi Admin|out";
-            }
+        if($jarak > 30) {
+            echo "error|Maaf Anda Berada Diluar Radius Presensi";
         } else {
-            $data = [
-                'nik' => $nik,
-                'tgl_presensi' => $tgl_presensi,
-                'jam_in' => $jam,
-                'foto_in' => $fileName,
-                'lokasi_in' => $lokasi
-            ];
-            $simpan = DB::table('presensi')->insert($data);
-            if ($simpan) {
-                echo "success|Terima Kasih, Selamat Belajar|in";
-                Storage::put($file, $image_base64);
+
+            if ($cek > 0) {
+                $data_pulang = [
+                    'jam_out' => $jam,
+                    'foto_out' => $fileName,
+                    'lokasi_out' => $lokasi
+                ];
+                $update = DB::table('presensi')->where('tgl_presensi', $tgl_presensi)->where('nik', $nik)->update($data_pulang);
+                if ($update) {
+                    echo "success|Terima Kasih, Selamat Pulang|out";
+                    Storage::put($file, $image_base64);
+                } else {
+                    echo "error|Maaf Absen Gagal, Mohon Hubungi Admin|out";
+                }
             } else {
-                echo "error|Maaf Absen Gagal, Mohon Hubungi Admin|in";
+                $data = [
+                    'nik' => $nik,
+                    'tgl_presensi' => $tgl_presensi,
+                    'jam_in' => $jam,
+                    'foto_in' => $fileName,
+                    'lokasi_in' => $lokasi
+                ];
+                $simpan = DB::table('presensi')->insert($data);
+                if ($simpan) {
+                    echo "success|Terima Kasih, Selamat Belajar|in";
+                    Storage::put($file, $image_base64);
+                } else {
+                    echo "error|Maaf Absen Gagal, Mohon Hubungi Admin|in";
+                }
             }
         }
+    }
+
+    function distance($lat1, $lon1, $lat2, $lon2)
+    {
+        $theta = $lon1 - $lon2;
+        $miles = (sin(deg2rad($lat1)) * sin(deg2rad($lat2))) + (cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta)));
+        $miles = acos($miles);
+        $miles = rad2deg($miles);
+        $miles = $miles * 60 * 1.1515;
+        $feet = $miles * 5280;
+        $yards = $feet / 3;
+        $kilometers = $miles * 1.609344;
+        $meters = $kilometers * 1000;
+        return compact('meters');
     }
 }

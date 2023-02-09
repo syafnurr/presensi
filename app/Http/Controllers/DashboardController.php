@@ -12,6 +12,9 @@ class DashboardController extends Controller
         $hariini = date("Y-m-d");
         $nik = Auth::guard('siswa')->user()->nik;
         $presensihariini = DB::table('presensi')->where('nik', $nik)->where('tgl_presensi', $hariini)->first();
-        return view('dashboard.dashboard', compact('presensihariini'));
+        // return view('dashboard.dashboard', compact('presensihariini'));
+        return view('dashboard.dashboard')->with([
+            'presensihariini' => $presensihariini
+        ]);
     }
 }
