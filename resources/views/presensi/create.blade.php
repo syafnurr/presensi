@@ -79,11 +79,11 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
         var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
-        var circle = L.circle([-7.943889759817503, 110.374204753438], {
+        var circle = L.circle([-7.771696472596395, 110.39255268235132], {
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.5,
-            radius: 100
+            radius: 3000
         }).addTo(map);
     }
 
@@ -118,9 +118,9 @@
                 } else {
                     Swal.fire({
                         title: 'Error !',
-                        text: 'Coba Ulangi Lagi atau Hubungi Admin',
+                        text: status[1],
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        // confirmButtonText: 'OK'
                     })
                 }
             }
