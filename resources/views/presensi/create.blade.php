@@ -83,7 +83,7 @@
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.5,
-            radius: 3000
+            radius: 30000
         }).addTo(map);
     }
 

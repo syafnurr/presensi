@@ -64,6 +64,7 @@
 <div class="section mt-2" id="presence-section">
     <div class="todaypresence">
         <div class="row">
+
             <div class="col-6">
                 <div class="card gradasigreen">
                     <div class="card-body">
